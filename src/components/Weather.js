@@ -38,11 +38,6 @@ const Weather = () => {
             flexDirection: 'column',
             justifyContent: 'space-between',
         },
-        bullet: {
-            display: 'inline-block',
-            margin: '0 2px',
-            transform: 'scale(0.8)',
-        },
         title: {
             fontSize: 14,
         },
@@ -88,7 +83,6 @@ const Weather = () => {
     }
 
     const classes = useStyles();
-    const bull = <span className={classes.bullet}>•</span>;
 
     useEffect(() => {
         getWeather();
@@ -115,14 +109,14 @@ const Weather = () => {
 
     const convertPages = (count) => {
         const pagesCount = count % USERS_PER_PAGE > 0 ? Math.floor(count / USERS_PER_PAGE) + 1 : Math.floor(count / USERS_PER_PAGE);
-        console.log(pagesCount);
+        // console.log(pagesCount);
         setPages(pagesCount);
     }
 
     const startPaging = (data) => {
         const startIndex = (page - 1) * USERS_PER_PAGE;
         const weatherReports = data.slice(startIndex, startIndex + USERS_PER_PAGE);
-        console.log(weatherReports)
+        // console.log(weatherReports)
         setSelectedReports(weatherReports);
     }
 
@@ -132,9 +126,8 @@ const Weather = () => {
         setPage(newPage);
         const startIndex = (newPage - 1) * USERS_PER_PAGE;
         const weatherReports = data.slice(startIndex, startIndex + USERS_PER_PAGE);
-        console.log(weatherReports, newPage);
+        // console.log(weatherReports, newPage);
         setSelectedReports(weatherReports);
-        return true;
     }
 
     const nextPaging = () => {
@@ -143,9 +136,8 @@ const Weather = () => {
         setPage(newPage);
         const startIndex = (newPage - 1) * USERS_PER_PAGE;
         const weatherReports = data.slice(startIndex, startIndex + USERS_PER_PAGE);
-        console.log(weatherReports, newPage, pages);
+        // console.log(weatherReports, newPage, pages);
         setSelectedReports(weatherReports);
-        return true;
     }
     return (
         <div
