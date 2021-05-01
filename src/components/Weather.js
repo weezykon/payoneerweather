@@ -11,18 +11,21 @@ import Typography from '@material-ui/core/Typography';
 import CatalogMagic from './CatalogMagic'
 import BarFlow from './BarFlow'
 
+// REDUX
+import { useSelector, useDispatch } from 'react-redux';
+import { next, prev, fah, cel, setPages, setGroupReports, setSelectedReports, setWeather } from './../actions';
+
 const Weather = () => {
-    const USERS_PER_PAGE = 3;
-    const [page, setPage] = useState(1);
-    const [pages, setPages] = useState(1);
+    // redux
+    const { temp, page, pages, conditions, reports, single_weather } = useSelector(state => state);
+    const dispatch = useDispatch();
+
+    // others
+    const DATA_PER_PAGE = 3;
     const [loading, setLoading] = useState(true);
-    const [tempType, setTempType] = useState('C');
-    const [groupReports, setGroupReports] = useState({});
-    const [selectedReports, setSelectedReports] = useState({});
-    const [activeWeather, setActiveWeather] = useState({});
-    const [activeBar, setActiveBar] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
+    // classes
     const useStyles = makeStyles((theme) => ({
         paper: {
             padding: theme.spacing(1),
@@ -77,9 +80,9 @@ const Weather = () => {
         }
     }));
 
-    const barFlow = (weather) => {
-        setActiveBar(true)
-        setActiveWeather(weather)
+    const barFlow = (weatherData) => {
+        console.log(weatherData);
+        dispatch(setWeather(weatherData))
     }
 
     const classes = useStyles();
@@ -89,7 +92,8 @@ const Weather = () => {
     }, []);
 
     const getWeather = () => {
-        axios.get('https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=75f972b80e26f14fe6c920aa6a85ad57&cnt=40')
+        const LINK = 'https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=75f972b80e26f14fe6c920aa6a85ad57&cnt=40';
+        axios.get(LINK)
             .then(res => {
                 const response = res.data.list;
                 // console.log(response);
@@ -100,44 +104,48 @@ const Weather = () => {
                 var results = Object.keys(dataGrouped).map(key => {
                     return dataGrouped[key];
                 })
-                setGroupReports(results)
+                dispatch(setGroupReports(results))
                 convertPages(results.length);
                 startPaging(results);
                 setLoading(false);
             })
+            .catch((error) => {
+                setErrorMessage('City not found, Try again');
+            })
     }
 
     const convertPages = (count) => {
-        const pagesCount = count % USERS_PER_PAGE > 0 ? Math.floor(count / USERS_PER_PAGE) + 1 : Math.floor(count / USERS_PER_PAGE);
+        const pagesCount = count % DATA_PER_PAGE > 0 ? Math.floor(count / DATA_PER_PAGE) + 1 : Math.floor(count / DATA_PER_PAGE);
         // console.log(pagesCount);
-        setPages(pagesCount);
+        dispatch(setPages(pagesCount));
     }
 
     const startPaging = (data) => {
-        const startIndex = (page - 1) * USERS_PER_PAGE;
-        const weatherReports = data.slice(startIndex, startIndex + USERS_PER_PAGE);
+        const startIndex = (page - 1) * DATA_PER_PAGE;
+        const weatherReports = data.slice(startIndex, startIndex + DATA_PER_PAGE);
         // console.log(weatherReports)
-        setSelectedReports(weatherReports);
+        dispatch(setSelectedReports(weatherReports));
     }
 
     const prevPaging = () => {
-        const data = groupReports;
+        const data = conditions;
         const newPage = page - 1;
-        setPage(newPage);
-        const startIndex = (newPage - 1) * USERS_PER_PAGE;
-        const weatherReports = data.slice(startIndex, startIndex + USERS_PER_PAGE);
-        // console.log(weatherReports, newPage);
-        setSelectedReports(weatherReports);
+        dispatch(prev());
+        const startIndex = (newPage - 1) * DATA_PER_PAGE;
+        const weatherReports = data.slice(startIndex, startIndex + DATA_PER_PAGE);
+        // console.log(weatherReports)
+        dispatch(setSelectedReports(weatherReports));
     }
 
     const nextPaging = () => {
-        const data = groupReports;
+        // console.log('here')
+        const data = conditions;
         const newPage = page + 1;
-        setPage(newPage);
-        const startIndex = (newPage - 1) * USERS_PER_PAGE;
-        const weatherReports = data.slice(startIndex, startIndex + USERS_PER_PAGE);
-        // console.log(weatherReports, newPage, pages);
-        setSelectedReports(weatherReports);
+        const startIndex = (newPage - 1) * DATA_PER_PAGE;
+        const weatherReports = data.slice(startIndex, startIndex + DATA_PER_PAGE);
+        dispatch(next());
+        dispatch(setSelectedReports(weatherReports));
+        // console.log(select)
     }
     return (
         <div
@@ -154,37 +162,37 @@ const Weather = () => {
                 <>
                     <div className={classes.radioSection}>
                         <ButtonGroup variant="text" color="secondary" aria-label="text primary button group">
-                            <Button onClick={() => { setTempType('C') }} disabled={tempType === 'C'}>Celcius</Button>
-                            <Button onClick={() => { setTempType('F') }} disabled={tempType === 'F'}>Fahrenheit</Button>
+                            <Button onClick={() => { dispatch(cel()) }} disabled={temp === 'C'}>Celcius</Button>
+                            <Button onClick={() => { dispatch(fah()) }} disabled={temp === 'F'}>Fahrenheit</Button>
                         </ButtonGroup>
                     </div>
                     <div className={classes.buttonDiv}>
                         <ButtonGroup size="large" color="primary" aria-label="large outlined primary button group">
-                            <Button onClick={prevPaging} disabled={page <= 1}>Prev</Button>
-                            <Button onClick={nextPaging} disabled={page === pages}>Next</Button>
+                            <Button onClick={() => prevPaging()} disabled={page <= 1}>Prev</Button>
+                            <Button onClick={() => nextPaging()} disabled={page === pages}>Next</Button>
                         </ButtonGroup>
                     </div>
                     <Grid container className={classes.weatherCards}>
                         {
-                            selectedReports.map((weather, index) => (
+                            reports.map((weatherItem, index) => (
                                 <Card className={classes.root} variant="outlined">
-                                    <CardContent className={classes.cardContent} onClick={() => barFlow(weather)}>
+                                    <CardContent className={classes.cardContent} onClick={() => barFlow(weatherItem)}>
                                         <Typography variant="h3" component="h1" gutterBottom>
-                                            {tempType === 'C' ? `${Math.floor(weather[0].main.temp - 273.15)}°C` : `${Math.floor((weather[0].main.temp - 273.15) * 9 / 5 + 32)}°F`}
+                                            {temp === 'C' ? `${Math.floor(weatherItem[0].main.temp - 273.15)}°C` : `${Math.floor((weatherItem[0].main.temp - 273.15) * 9 / 5 + 32)}°F`}
                                         </Typography>
                                         <Typography>
-                                            <b>Weather:</b> {weather[0].weather[0].main}
+                                            <b>Weather:</b> {weatherItem[0].weather[0].main}
                                         </Typography>
                                         <Typography>
-                                            <b>Date:</b> {new Date(+`${weather[0].dt}000`).toDateString()}
+                                            <b>Date:</b> {new Date(+`${weatherItem[0].dt}000`).toDateString()}
                                         </Typography>
                                     </CardContent>
                                 </Card>
                             ))
                         }
                     </Grid>
-                    {activeBar ? (
-                        <BarFlow weather={activeWeather} temp={tempType} />) : ('')
+                    {single_weather.active ? (
+                        <BarFlow />) : ('')
                     }
                 </>
             )}

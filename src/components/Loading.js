@@ -9,7 +9,6 @@ const Loading = () => {
     return (
         <Grid
             container
-            maxWidth="lg"
             direction="row"
             spacing={10}
             alignItems="center"

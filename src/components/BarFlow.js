@@ -11,6 +11,8 @@ import {
     Legend
 } from "recharts";
 
+// Redux
+import { useSelector } from 'react-redux';
 class CustomizedLabel extends React.Component {
     render() {
         const { x, y, fill, value } = this.props;
@@ -30,7 +32,9 @@ class CustomizedLabel extends React.Component {
     }
 }
 
-const BarFlow = ({ weather, temp }) => {
+const BarFlow = () => {
+    const { temp, single_weather } = useSelector(state => state);
+    console.log(temp)
     // console.log(weather);
     function formatAMPM(date) {
         // console.log(new Date(date).getHours());
@@ -45,8 +49,8 @@ const BarFlow = ({ weather, temp }) => {
         return strTime;
     }
     let barData = []
-    for (let index = 0; index < weather.length; index++) {
-        const element = weather[index];
+    for (let index = 0; index < single_weather.weather.length; index++) {
+        const element = single_weather.weather[index];
         // console.log(element);
         barData.push({
             projectedProfit: temp === 'C' ? Math.floor(element.main.temp - 273.15) : Math.floor((element.main.temp - 273.15) * 9 / 5 + 32),
