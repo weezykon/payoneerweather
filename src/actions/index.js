@@ -44,9 +44,29 @@ export const setSelectedReports = (data) => {
 };
 
 export const setWeather = (data) => {
-    console.log('here');
     return {
         type: 'dayWeather',
+        data
+    };
+};
+
+export const setError = (data) => {
+    return {
+        type: 'ERROR',
+        data
+    };
+};
+
+export const setLoading = (data) => {
+    return {
+        type: 'loadingData',
+        data
+    };
+};
+
+export const setPreloader = (data) => {
+    return {
+        type: 'PRELOADER',
         data
     };
 };

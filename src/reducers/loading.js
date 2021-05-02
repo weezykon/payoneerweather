@@ -1,6 +1,6 @@
-const reportsReducer = (state = [], action) => {
+const loadingReducer = (state = true, action) => {
     switch (action.type) {
-        case 'selected':
+        case 'loadingData':
             state = action.data;
             break;
         default:
@@ -9,4 +9,4 @@ const reportsReducer = (state = [], action) => {
     return state;
 }
 
-export default reportsReducer;
+export default loadingReducer;

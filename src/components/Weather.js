@@ -1,5 +1,5 @@
 /* eslint-disable react/require-render-return */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios';
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
@@ -13,17 +13,15 @@ import BarFlow from './BarFlow'
 
 // REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { next, prev, fah, cel, setPages, setGroupReports, setSelectedReports, setWeather } from './../actions';
+import { next, prev, fah, cel, setPages, setGroupReports, setSelectedReports, setWeather, setLoading, setError } from './../actions';
 
 const Weather = () => {
     // redux
-    const { temp, page, pages, conditions, reports, single_weather } = useSelector(state => state);
+    const { temp, page, pages, conditions, reports, single_weather, loading, errorMessage } = useSelector(state => state);
     const dispatch = useDispatch();
 
     // others
     const DATA_PER_PAGE = 3;
-    const [loading, setLoading] = useState(true);
-    const [errorMessage, setErrorMessage] = useState(null);
 
     // classes
     const useStyles = makeStyles((theme) => ({
@@ -81,7 +79,7 @@ const Weather = () => {
     }));
 
     const barFlow = (weatherData) => {
-        console.log(weatherData);
+        // console.log(weatherData);
         dispatch(setWeather(weatherData))
     }
 
@@ -107,10 +105,11 @@ const Weather = () => {
                 dispatch(setGroupReports(results))
                 convertPages(results.length);
                 startPaging(results);
-                setLoading(false);
+                dispatch(setLoading(false));
             })
             .catch((error) => {
-                setErrorMessage('City not found, Try again');
+                dispatch(setError('City not found, Try again'));
+                dispatch(setLoading(false));
             })
     }
 
@@ -150,13 +149,13 @@ const Weather = () => {
     return (
         <div
             container className={classes.content}>
-            {loading && !errorMessage ? (
+            {loading && !errorMessage.active ? (
                 <>
                     <CatalogMagic />
                 </>
-            ) : errorMessage ? (
+            ) : errorMessage.active ? (
                 <div className="alert alert-danger" role="alert">
-                    {errorMessage}
+                    {errorMessage.message}
                 </div>
             ) : (
                 <>

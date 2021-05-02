@@ -34,7 +34,7 @@ class CustomizedLabel extends React.Component {
 
 const BarFlow = () => {
     const { temp, single_weather } = useSelector(state => state);
-    console.log(temp)
+    // console.log(temp)
     // console.log(weather);
     function formatAMPM(date) {
         // console.log(new Date(date).getHours());

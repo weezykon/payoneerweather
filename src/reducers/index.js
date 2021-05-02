@@ -7,6 +7,9 @@ import tempReducer from './temp';
 import conditionReducer from './conditions';
 import reportsReducer from './reports';
 import weatherReducer from './weather';
+import loadingReducer from './loading';
+import errorReducer from './errorMessage';
+import preloadingReducer from './preload';
 
 const reducers = combineReducers({
     page: pageReducer,
@@ -15,6 +18,9 @@ const reducers = combineReducers({
     conditions: conditionReducer,
     reports: reportsReducer,
     single_weather: weatherReducer,
+    loading: loadingReducer,
+    errorMessage: errorReducer,
+    preload: preloadingReducer,
 });
 
 export default reducers;

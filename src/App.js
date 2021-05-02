@@ -3,17 +3,23 @@ import './App.css';
 import Loading from './components/Loading'
 import Weather from './components/Weather'
 
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { setPreloader } from './actions';
 
 function App() {
-  const [loading, setLoading] = useState(true)
+  const { preload } = useSelector(state => state);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 3000)
+    setTimeout(() => {
+      dispatch(setPreloader(false));
+    }, 3000)
   }, [])
 
   return (
     <>
-      {loading === false ? (
+      {!preload ? (
         <Weather />
       ) : (
         <Loading />

@@ -1,9 +1,9 @@
-const weatherReducer = (state = { active: false }, action) => {
+const errorReducer = (state = { active: false }, action) => {
     switch (action.type) {
-        case 'dayWeather':
+        case 'ERROR':
             state = {
                 active: true,
-                weather: action.data,
+                message: action.data,
             };
             break;
         default:
@@ -12,4 +12,4 @@ const weatherReducer = (state = { active: false }, action) => {
     return state;
 }
 
-export default weatherReducer;
+export default errorReducer;
