@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-// import BarChart from 'react-easy-bar-chart';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from "@material-ui/core/styles";
 import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Cell,
-    CartesianGrid,
-    Tooltip,
-    Legend
-} from "recharts";
+    Chart,
+    BarSeries,
+    Title,
+    ArgumentAxis,
+    ValueAxis,
+} from '@devexpress/dx-react-chart-material-ui';
+
+import { Animation } from '@devexpress/dx-react-chart';
 
 // Redux
 import { useSelector } from 'react-redux';
@@ -33,6 +34,14 @@ class CustomizedLabel extends React.Component {
 }
 
 const BarFlow = () => {
+    const useStyles = makeStyles((theme) => ({
+        chartDiv: {
+            display: 'flex',
+            width: "400px",
+            maxWidth: "100%",
+        },
+    }));
+    const classes = useStyles();
     const { temp, single_weather } = useSelector(state => state);
     // console.log(temp)
     // console.log(weather);
@@ -53,26 +62,15 @@ const BarFlow = () => {
         const element = single_weather.weather[index];
         // console.log(element);
         barData.push({
-            projectedProfit: temp === 'C' ? Math.floor(element.main.temp - 273.15) : Math.floor((element.main.temp - 273.15) * 9 / 5 + 32),
+            temp: temp === 'C' ? Math.floor(element.main.temp - 273.15) : Math.floor((element.main.temp - 273.15) * 9 / 5 + 32),
             // projectedProfit: Math.floor(element.main.temp - 273.15),
-            AnswerRef: "five",
-            Text: formatAMPM(`${new Date(+`${element.dt}000`)}`),
-            Score: 0,
-            RespondentPercentage: 23,
-            Rank: 2,
+            time: formatAMPM(`${new Date(+`${element.dt}000`)}`),
             color: "#015677"
         })
     }
     return (
         <div>
             {/* <BarChart
-                xAxis='React Bar Chart'
-                yAxis="value"
-                height={400}
-                width={800}
-                data={data}
-            /> */}
-            <BarChart
                 width={600}
                 height={400}
                 data={barData}
@@ -90,7 +88,23 @@ const BarFlow = () => {
                         <Cell fill={barData[index].color} />
                     ))}
                 </Bar>
-            </BarChart>
+            </BarChart> */}
+            <Paper container="true">
+                <Chart
+                    className={classes.chartDiv}
+                    data={barData}
+                >
+                    <ArgumentAxis />
+                    <ValueAxis max={7} />
+
+                    <BarSeries
+                        valueField="temp"
+                        argumentField="time"
+                    />
+                    <Title text="Weather" />
+                    <Animation />
+                </Chart>
+            </Paper>
         </div>
     )
 };
