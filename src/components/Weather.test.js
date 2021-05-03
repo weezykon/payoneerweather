@@ -32,15 +32,4 @@ describe('Weather', () => {
 
         expect(data.length).toBeGreaterThan(0);
     });
-
-    // it('failed weather report', async () => {
-    //     // expect(result).toEqual(
-    //     //     'Request failed with status code 404',
-    //     //   );
-    //       const result = await fetchFailedData();
-      
-    //       expect(result).toEqual(fakeResp)
-    //       expect(axiosSpy).toHaveBeenCalledTimes(1) 
-    //     // expect(data).toEqual(null);
-    // });
 });

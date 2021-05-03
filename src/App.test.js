@@ -27,21 +27,3 @@ it('Loads Preloader', () => {
 
   expect('preload').toBeTruthy()
 })
-
-// it('Update Preloader State Weather', () => {
-//   const timerGame = require('./tests/timerGame');
-//   const callback = jest.fn();
-
-//   timerGame(callback);
-//   jest.useFakeTimers()
-//   jest.runAllTimers();
-//   const { store, invoke } = create()
-//   invoke((dispatch, getState) => {
-//     dispatch('setPreloader')
-//     getState()
-//   })
-//   expect(store.dispatch).toHaveBeenCalledWith('setPreloader')
-//   expect(store.getState).toHaveBeenCalled()
-//   console.log(store.getState)
-//   expect(store.getState).toBeTruthy()
-// })
