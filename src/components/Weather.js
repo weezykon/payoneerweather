@@ -91,7 +91,8 @@ const Weather = () => {
     }, []);
 
     const getWeather = () => {
-        const LINK = 'https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=75f972b80e26f14fe6c920aa6a85ad57&cnt=40';
+        // const LINK = 'https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=75f972b80e26f14fe6c920aa6a85ad57&cnt=40';
+        const LINK = 'https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=72fb8514b5c66d897e94bc4c0e872a18&cnt=40';
         axios.get(LINK)
             .then(res => {
                 const response = res.data.list;
@@ -148,6 +149,10 @@ const Weather = () => {
         dispatch(setSelectedReports(weatherReports));
         // console.log(select)
     }
+
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
     return (
         <div
             container="true" className={classes.content}>
@@ -182,10 +187,16 @@ const Weather = () => {
                                             {temp === 'C' ? `${Math.floor(weatherItem[0].main.temp - 273.15)}°C` : `${Math.floor((weatherItem[0].main.temp - 273.15) * 9 / 5 + 32)}°F`}
                                         </Typography>
                                         <Typography>
-                                            <b>Weather:</b> {weatherItem[0].weather[0].main}
+                                            <b>Weather:</b> {capitalizeFirstLetter(weatherItem[0].weather[0].description)}
                                         </Typography>
                                         <Typography>
                                             <b>Date:</b> {new Date(+`${weatherItem[0].dt}000`).toDateString()}
+                                        </Typography>
+                                        <div className={classes.hr} />
+                                        <Typography className={classes.info}>
+                                            Wind: <b>{weatherItem[0].wind.speed}</b> km/h
+
+                                            Humidity: <b>{weatherItem[0].main.humidity}</b> %
                                         </Typography>
                                     </CardContent>
                                 </Card>
