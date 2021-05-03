@@ -75,6 +75,7 @@ const Weather = () => {
         },
         weatherCards: {
             gridGap: "30px",
+            cursor: "pointer"
         }
     }));
 
