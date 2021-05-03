@@ -91,8 +91,7 @@ const Weather = () => {
     }, []);
 
     const getWeather = () => {
-        // const LINK = 'https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=75f972b80e26f14fe6c920aa6a85ad57&cnt=40';
-        const LINK = 'https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=72fb8514b5c66d897e94bc4c0e872a18&cnt=40';
+        const LINK = `https://api.openweathermap.org/data/2.5/forecast?q=Munich,de&APPID=${process.env.REACT_APP_OPEN_WEATHER_API}&cnt=40`;
         axios.get(LINK)
             .then(res => {
                 const response = res.data.list;
