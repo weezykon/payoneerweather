@@ -99,6 +99,7 @@ const Weather = () => {
                     r[`${new Date(+`${a.dt}000`).getFullYear()}/${new Date(+`${a.dt}000`).getMonth()}/${new Date(+`${a.dt}000`).getDate()}`] = [...r[`${new Date(+`${a.dt}000`).getFullYear()}/${new Date(+`${a.dt}000`).getMonth()}/${new Date(+`${a.dt}000`).getDate()}`] || [], a];
                     return r;
                 }, {});
+                // console.log(dataGrouped);
                 var results = Object.keys(dataGrouped).map(key => {
                     return dataGrouped[key];
                 })
@@ -148,7 +149,7 @@ const Weather = () => {
     }
     return (
         <div
-            container className={classes.content}>
+            container="true" className={classes.content}>
             {loading && !errorMessage.active ? (
                 <>
                     <CatalogMagic />
@@ -168,7 +169,7 @@ const Weather = () => {
                     <div className={classes.buttonDiv}>
                         <ButtonGroup size="large" color="primary" aria-label="large outlined primary button group">
                             <Button onClick={() => prevPaging()} disabled={page <= 1}>Prev</Button>
-                            <Button onClick={() => nextPaging()} disabled={page === pages}>Next</Button>
+                            <Button onClick={() => nextPaging()} disabled={page === pages} data-testid="button-next">Next</Button>
                         </ButtonGroup>
                     </div>
                     <Grid container className={classes.weatherCards}>
